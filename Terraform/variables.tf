@@ -6,7 +6,7 @@ variable "aws_region" {
 }
 
 # keys to the castle variable
-/*variable "aws_access_key" {
+variable "aws_access_key" {
   type      = string
   sensitive = true
 }
@@ -14,7 +14,7 @@ variable "aws_region" {
 variable "aws_secret_key" {
   type      = string
   sensitive = true
-}*/
+}
 
 # vpc variable
 variable "vpc_cidr" {
