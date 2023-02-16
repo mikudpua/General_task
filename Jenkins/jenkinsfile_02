@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    tools {
+       terraform 'Terraform v1.3.6'
+    }
+    stages {
+        stage('Git checkout'){
+            steps{
+                git branch: 'main', credentialsId: 'git', url: 'git@github.com:mikudpua/terraform_ECS.git'
+
+            }
+        }
+        stage('Terraform init'){
+            steps{
+                sh 'terraform init'
+            }
+        }
+        stage('Terraform apply'){
+            steps{
+                sh 'terraform apply --auto-approve'
+            }
+        }
+        stage('ecs update'){
+            steps {
+               sh 'aws ecs update-service --cluster cluster --service service --task-definition service --force-new-deployment'
+           }
+        }
+    }
+}

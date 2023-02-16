@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    tools {
+       terraform 'Terraform v1.3.6'
+    }
+    stages {
+        stage('clone') {
+            steps {
+                git branch: 'main', credentialsId: 'git', url: 'git@github.com:mikudpua/sp_petclinic.git'
+                sh 'ls -la'
+                sh 'sh ./mvnw package'
+            }
+        }
+         stage('build_image') {
+            steps {
+                sh 'docker build -f ./Dockerfile.cp -t mikudpua/petclinic:02 .'
+            }
+        }
+        stage('Push docker image to DockerHub') {
+            steps{
+                withDockerRegistry(credentialsId: 'dockerhub_cread_mikudpua', url: 'https://index.docker.io/v1/')
+                {
+                    sh 'docker push mikudpua/petclinic:02'
+                }
+            }
+        }
+
+    }
+}
